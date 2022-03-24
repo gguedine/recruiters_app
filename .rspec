@@ -1,0 +1,4 @@
+--color
+--require spec_helper
+--format progress
+--exclude-pattern spec/features/**/*_spec.rb
