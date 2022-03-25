@@ -34,6 +34,9 @@ gem 'bootsnap', '>= 1.4.6', require: false
 gem 'dotenv-rails'
 gem 'lograge'
 gem 'logstash-event'
+# Elasticsearch integration
+gem 'elasticsearch-model'
+gem 'elasticsearch-rails'
 
 group :development, :test do
   gem 'awesome_print'
@@ -41,7 +44,9 @@ group :development, :test do
   gem 'pry-byebug', :source => 'http://rubygems.org/'
   gem 'pry-rails'
   gem 'rubocop', require: false
-  gem 'rubocop-rspec'
+  gem "rubocop-performance", require: false
+  gem "rubocop-rails", require: false
+  gem "rubocop-rspec", require: false
 end
 
 group :test do
@@ -51,6 +56,7 @@ group :test do
   gem 'jsonapi-rspec'
   gem 'simplecov', require: false
   gem 'database_cleaner', '1.6.1'
+  gem 'elasticsearch-extensions'
 end
 
 group :development do

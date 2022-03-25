@@ -30,3 +30,5 @@ submission = Submission.update_or_create!(
   "job_id": job.id
 )
 puts "Submission created!\n"
+# Job.__elasticsearch__.create_index!
+# Job.import

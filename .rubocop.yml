@@ -1,98 +1,187 @@
-# This is the configuration used to check the rubocop source code.
+inherit_from: .rubocop_todo.yml
 
-#inherit_from: ../.rubocop.yml
 require:
-  - rubocop/cop/internal_affairs
+  - rubocop-performance
+  - rubocop-rails
   - rubocop-rspec
 
 AllCops:
+  NewCops: enable
   Exclude:
     - 'vendor/**/*'
-    - 'spec/fixtures/**/*'
+    - 'test/fixtures/**/*'
+    - 'db/**/*'
+    - 'bin/**/*'
+    - 'log/**/*'
     - 'tmp/**/*'
+    - 'app/views/**/*'
+    - 'config/environments/*'
+    - 'node_modules/**/*'
 
-Naming/PredicateName:
-  # Method define macros for dynamically generated method.
-  MethodDefinitionMacros:
-    - define_method
-    - define_singleton_method
-    - def_node_matcher
-    - def_node_search
+# Metrics Cops
 
-Style/FormatStringToken:
-  # Because we parse a lot of source codes from strings. Percent arrays
-  # look like unannotated format string tokens to this cop.
+Metrics/ClassLength:
+  Description: 'Avoid classes longer than 100 lines of code.'
+  Max: 100
+  Enabled: true
+
+Metrics/ModuleLength:
+  Description: 'Avoid modules longer than 100 lines of code.'
+  Max: 100
+  Enabled: true
+
+Metrics/ParameterLists:
+  Description: 'Pass no more than four parameters into a method.'
+  Max: 4
+  Enabled: true
+
+Metrics/MethodLength:
+  Description: 'Avoid methods longer than 5 lines of code.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#short-methods'
+  Max: 5
+  Enabled: true
+
+Metrics/BlockLength:
+  CountComments: false
+  Max: 5
+  IgnoredMethods:
+    - context
+    - describe
+    - it
+    - shared_examples
+    - shared_examples_for
+    - namespace
+    - draw
+    - configure
+    - group
+
+# Style Cops
+
+Style/BlockDelimiters:
   Exclude:
-    - spec/**/*
+    - 'spec/**/*'
 
-Style/IpAddresses:
-  # The test for this cop includes strings that would cause offenses
-  Exclude:
-    - spec/rubocop/cop/style/ip_addresses_spec.rb
-
-RSpec/ContextWording:
+Style/SymbolArray:
   Enabled: false
 
+Style/ClassAndModuleChildren:
+  Description: 'Checks style of children classes and modules.'
+  Enabled: false
+  EnforcedStyle: nested
+
+Style/CollectionMethods:
+  Enabled: true
+  PreferredMethods:
+    find: detect
+    inject: reduce
+    collect: map
+    find_all: select
+
 Style/Documentation:
+  Description: 'Document classes and non-namespace modules.'
   Enabled: false
 
 Style/FrozenStringLiteralComment:
+  Description: >-
+    Add the frozen_string_literal comment to the top of files
+    to help transition from Ruby 2.3.0 to Ruby 3.0.
   Enabled: false
 
-Layout/EndOfLine:
-  EnforcedStyle: lf
+Style/IfUnlessModifier:
+  Description: >-
+    Favor modifier if/unless usage when you have a
+    single-line body.
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#if-as-a-modifier'
+  Enabled: false
 
-Layout/ClassStructure:
+Style/InlineComment:
+  Description: 'Avoid inline comments.'
+  Enabled: false
+
+Style/LineEndConcatenation:
+  Description: >-
+    Use \ instead of + or << to concatenate two string literals at
+    line end.
   Enabled: true
-  Categories:
-    module_inclusion:
-      - include
-      - prepend
-      - extend
-  ExpectedOrder:
-    - module_inclusion
-    - constants
-    - public_class_methods
-    - initializer
-    - instance_methods
-    - protected_methods
-    - private_methods
 
-Layout/IndentHeredoc:
-  EnforcedStyle: powerpack
+Style/StringLiterals:
+  Description: 'Checks if uses of quotes match the configured preference.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#consistent-string-literals'
+  EnforcedStyle: double_quotes
+  Enabled: true
 
-# Trailing white space is meaningful in code examples
-Layout/TrailingWhitespace:
-  AllowInHeredoc: true
+Style/TrailingCommaInArguments:
+  Description: 'Checks for trailing comma in argument lists.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-trailing-array-commas'
+  EnforcedStyleForMultiline: comma
+  SupportedStylesForMultiline:
+    - comma
+    - consistent_comma
+    - no_comma
+  Enabled: true
 
-Lint/AmbiguousBlockAssociation:
+Style/TrailingCommaInArrayLiteral:
+  Description: 'Checks for trailing comma in array literals.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-trailing-array-commas'
+  EnforcedStyleForMultiline: comma
+  SupportedStylesForMultiline:
+    - comma
+    - consistent_comma
+    - no_comma
+  Enabled: true
+
+Style/TrailingCommaInHashLiteral:
+  Description: 'Checks for trailing comma in hash literals.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-trailing-array-commas'
+  EnforcedStyleForMultiline: comma
+  SupportedStylesForMultiline:
+    - comma
+    - consistent_comma
+    - no_comma
+  Enabled: true
+
+Style/RedundantFetchBlock:
+  Enabled: false
+# Layout Cops
+
+Layout/ArgumentAlignment:
   Exclude:
-    - 'spec/**/*.rb'
+    - 'config/initializers/*'
 
-Lint/InterpolationCheck:
-  Exclude:
-    - 'spec/**/*.rb'
-
-Lint/UselessAccessModifier:
-  MethodCreatingMethods:
-    - 'def_matcher'
-    - 'def_node_matcher'
-
-Lint/BooleanSymbol:
+Layout/FirstArgumentIndentation:
   Enabled: false
 
-Metrics/BlockLength:
-  Exclude:
-    - 'Rakefile'
-    - '**/*.rake'
-    - 'spec/**/*.rb'
+Layout/DotPosition:
+  Description: 'Checks the position of the dot in multi-line method calls.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#consistent-multi-line-chains'
+  Enabled: false
 
-Metrics/ModuleLength:
-  Exclude:
-    - 'spec/**/*.rb'
+Layout/LineLength:
+  Description: 'Limit lines to 120 characters.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#80-character-limits'
+  Max: 120
 
-RSpec/PredicateMatcher:
-  EnforcedStyle: explicit
+Layout/MultilineOperationIndentation:
+  Description: >-
+    Checks indentation of binary operations that span more than
+    one line.
+  Enabled: true
+  EnforcedStyle: indented
 
-RSpec/NestedGroups:
-  Max: 7
+Layout/MultilineMethodCallIndentation:
+  Description: >-
+    Checks indentation of method calls with the dot operator
+    that span more than one line.
+  Enabled: true
+  EnforcedStyle: indented
+
+# Rails Cops
+
+Rails/Delegate:
+  Description: 'Prefer delegate method for delegations.'
+  Enabled: false
+
+# Bundler Cops
+
+Bundler/OrderedGems:
+  Enabled: false

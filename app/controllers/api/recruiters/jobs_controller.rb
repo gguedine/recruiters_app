@@ -1,5 +1,5 @@
-class API::JobsController < ApplicationController
-  before_action :authorized, only: %i[create update destroy ]
+class API::Recruiters::JobsController < AuthorizationController
+  before_action :authorized
   before_action :set_job, only: %i[ show update destroy ]
 
   # GET /jobs
@@ -16,10 +16,10 @@ class API::JobsController < ApplicationController
   # POST /jobs
   # POST /jobs.json
   def create
-    @job = Job.new(job_params)
+    @job = Job.new(job_params.merge!(recruiter_id: @recruiter.id))
 
     if @job.save
-      render :show, status: :created, location: api_url(@job)
+      render "api/jobs/show", status: :created , location: api_url(@job)
     else
       render json: @job.errors, status: :unprocessable_entity
     end
@@ -28,7 +28,7 @@ class API::JobsController < ApplicationController
   # PATCH/PUT /jobs/1
   # PATCH/PUT /jobs/1.json
   def update
-    if @job.update(job_params)
+    if @job.update(job_params.merge!(recruiter_id: @recruiter.id))
       render :show, status: :ok, location: api_url(@job)
     else
       render json: @job.errors, status: :unprocessable_entity

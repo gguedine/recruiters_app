@@ -1,4 +1,5 @@
-class API::SubmissionsController < ApplicationController
+class API::Recruiters::SubmissionsController < AuthorizationController
+  before_action :authorized
   before_action :set_submission, only: %i[ show update destroy ]
 
   # GET /submissions

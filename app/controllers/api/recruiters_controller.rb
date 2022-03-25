@@ -1,5 +1,5 @@
-class API::RecruitersController < ApplicationController
-  before_action :authorized, only: [:auto_login]
+class API::RecruitersController < AuthorizationController
+  before_action :authorized, except: %i[create]
   before_action :set_recruiter, only: %i[ show update destroy ]
 
   # GET /recruiters
@@ -43,29 +43,10 @@ class API::RecruitersController < ApplicationController
     render json: {data: @recruiter.destroy, message: "Deleted!"}
   end
 
-  def login
-    @recruiter = Recruiter.find_by(email: params[:email])
-
-    if @recruiter && @recruiter.authenticate(params[:password])
-      set_token
-      render :show, status: :ok, location: api_url(@recruiter), locals: {token: @token}
-    else
-      render json: {error: "Invalid email or password"}
-    end
-  end
-
-  def auto_login
-    render :show, status: :ok, location: api_url(@recruiter)
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
   def set_recruiter
-    @recruiter = Recruiter.find(params[:id])
-  end
-
-  def set_token
-    @token = encode_token({user_id: @recruiter.id})
+    @recruiter ||= Recruiter.find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
