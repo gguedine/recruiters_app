@@ -1,21 +1,25 @@
 class API::Public::JobsController < ApplicationController
+  before_action :set_job, only: :show
 
+  # GET api/public/jobs
+  # GET api/public/jobs?title=abc&description=cba
+  # GET api/public/jobs.json
   def index
-    return unless query.present?
+    @jobs = Job.filter(filtering_params)
+  end
 
-    @posts = Post.our_first_query(query)
+  # GET api/public/jobs/1
+  # GET api/public/jobs/1.json
+  def show
   end
 
   private
-
-  def self.our_first_query(query)
-    search(
-      query: {
-        multi_match: {
-          query: query,
-          fields: %w[title body^5]
-        }
-      }
-    )
+  def set_job
+    @job = Job.find(params[:id])
   end
+
+  def filtering_params
+    params.slice(:title, :description, :start_date, :end_date, :skills)
+  end
+
 end

@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_24_055457) do
+ActiveRecord::Schema.define(version: 2022_03_29_202435) do
 
   create_table "jobs", force: :cascade do |t|
     t.string "title"
     t.text "description"
     t.datetime "start_date"
     t.datetime "end_date"
-    t.string "status"
+    t.integer "status", default: 0
     t.text "skills"
     t.integer "recruiter_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 2022_03_24_055457) do
     t.integer "job_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["job_id", "email"], name: "index_submissions_on_job_id_and_email", unique: true
     t.index ["job_id"], name: "index_submissions_on_job_id"
   end
 

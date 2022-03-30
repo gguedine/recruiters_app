@@ -1,5 +1,4 @@
 class AuthorizationController < ActionController::API
-  before_action :authorized
 
   def encode_token(payload)
     #payload[:exp] = (15).minutes.from_now.to_i #expire in 15 minutes

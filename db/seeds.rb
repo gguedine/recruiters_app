@@ -16,7 +16,14 @@ puts "Creating job..."
 job = Job.update_or_create!(
   { id: 10 },
   "title": "Vaga estágio", "description": "descrição teste",
-  "skills": "programador ruby", "status": "ativo",
+  "skills": "programador ruby", "status": "active",
+  "start_date": "24/03/2022", "end_date": "30/06/2022",
+  "recruiter_id": recruiter.id
+)
+job = Job.update_or_create!(
+  { id: 11 },
+  "title": "Vaga trabalho", "description": "descrição teste trabalho",
+  "skills": "programador ruby", "status": "active",
   "start_date": "24/03/2022", "end_date": "30/06/2022",
   "recruiter_id": recruiter.id
 )

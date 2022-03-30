@@ -7,8 +7,14 @@ Rails.application.routes.draw do
     end
 
     namespace :recruiters do
+      post :login
+      get :auto_login
       resources :submissions
       resources :jobs
+    end
+    namespace :public do
+      resource :submission, only: %i[create]
+      resources :jobs, only: %i[index show]
     end
     resources :recruiters do
       # collection do

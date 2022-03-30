@@ -1,1 +1,1 @@
-json.array! @jobs, partial: "api/recruiters/jobs/job", as: :job
+json.array! @jobs, partial: "api/public/jobs/job", as: :job

@@ -1,1 +1,1 @@
-json.partial! "api/recruiters/submissions/submission", submission: @submission
+json.partial! "api/public/submissions/submission", submission: @submission

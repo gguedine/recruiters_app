@@ -12,30 +12,32 @@ require 'rails_helper'
 # of tools you can use to make these specs even more expressive, but we're
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
-RSpec.describe "/submissions", type: :request do
+RSpec.describe "api/recruiters/submissions", type: :request do
   # This should return the minimal set of attributes required to create a valid
   # Submission. As you add validations to Submission, be sure to
   # adjust the attributes here as well.
+  let(:job) { create(:job, :with_recruiter)}
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    attributes_for(:submission, job_id: job.id)
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    attributes_for(:submission, job_id: job.id, name: nil)
   }
 
   # This should return the minimal set of values that should be in the headers
   # in order to pass any filters (e.g. authentication) defined in
   # SubmissionsController, or in your router and rack
   # middleware. Be sure to keep this updated too.
-  let(:valid_headers) {
-    {}
-  }
+  let(:valid_headers) do
+    token = JWT.encode({user_id: Recruiter.last&.id || create(:recruiter, valid_attributes)}, ENV['SECRET'])
+    { "Authorization": "Beared #{token}" }
+  end
 
   describe "GET /index" do
     it "renders a successful response" do
       Submission.create! valid_attributes
-      get submissions_url, headers: valid_headers, as: :json
+      get api_recruiters_submissions_url, headers: valid_headers, as: :json
       expect(response).to be_successful
     end
   end
@@ -43,7 +45,7 @@ RSpec.describe "/submissions", type: :request do
   describe "GET /show" do
     it "renders a successful response" do
       submission = Submission.create! valid_attributes
-      get submission_url(submission), as: :json
+      get api_recruiters_submission_url(submission), headers: valid_headers, as: :json
       expect(response).to be_successful
     end
   end
@@ -52,13 +54,13 @@ RSpec.describe "/submissions", type: :request do
     context "with valid parameters" do
       it "creates a new Submission" do
         expect {
-          post submissions_url,
+          post api_recruiters_submissions_url,
                params: { submission: valid_attributes }, headers: valid_headers, as: :json
         }.to change(Submission, :count).by(1)
       end
 
       it "renders a JSON response with the new submission" do
-        post submissions_url,
+        post api_recruiters_submissions_url,
              params: { submission: valid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -68,13 +70,13 @@ RSpec.describe "/submissions", type: :request do
     context "with invalid parameters" do
       it "does not create a new Submission" do
         expect {
-          post submissions_url,
+          post api_recruiters_submissions_url,
                params: { submission: invalid_attributes }, as: :json
         }.to change(Submission, :count).by(0)
       end
 
       it "renders a JSON response with errors for the new submission" do
-        post submissions_url,
+        post api_recruiters_submissions_url,
              params: { submission: invalid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -85,20 +87,22 @@ RSpec.describe "/submissions", type: :request do
   describe "PATCH /update" do
     context "with valid parameters" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        attributes_for(:submission, job_id: job.id)
       }
 
       it "updates the requested submission" do
         submission = Submission.create! valid_attributes
-        patch submission_url(submission),
+        patch api_recruiters_submission_url(submission),
               params: { submission: new_attributes }, headers: valid_headers, as: :json
         submission.reload
-        skip("Add assertions for updated state")
+        expect(submission).to have_attributes({name: new_attributes[:name],
+                                               email: new_attributes[:email]})
+
       end
 
       it "renders a JSON response with the submission" do
         submission = Submission.create! valid_attributes
-        patch submission_url(submission),
+        patch api_recruiters_submission_url(submission),
               params: { submission: new_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -108,7 +112,7 @@ RSpec.describe "/submissions", type: :request do
     context "with invalid parameters" do
       it "renders a JSON response with errors for the submission" do
         submission = Submission.create! valid_attributes
-        patch submission_url(submission),
+        patch api_recruiters_submission_url(submission),
               params: { submission: invalid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -120,7 +124,7 @@ RSpec.describe "/submissions", type: :request do
     it "destroys the requested submission" do
       submission = Submission.create! valid_attributes
       expect {
-        delete submission_url(submission), headers: valid_headers, as: :json
+        delete api_recruiters_submission_url(submission), headers: valid_headers, as: :json
       }.to change(Submission, :count).by(-1)
     end
   end

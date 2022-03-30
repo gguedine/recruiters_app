@@ -1,5 +1,5 @@
-class API::RecruitersController < AuthorizationController
-  before_action :authorized, except: %i[create]
+class API::RecruitersController < API::LoginController
+  before_action :authorized, except: %i[create login]
   before_action :set_recruiter, only: %i[ show update destroy ]
 
   # GET /recruiters

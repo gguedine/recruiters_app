@@ -2,19 +2,19 @@ class API::Recruiters::SubmissionsController < AuthorizationController
   before_action :authorized
   before_action :set_submission, only: %i[ show update destroy ]
 
-  # GET /submissions
-  # GET /submissions.json
+  # GET api/recruiters/submissions
+  # GET api/recruiters/submissions.json
   def index
     @submissions = Submission.all
   end
 
-  # GET /submissions/1
-  # GET /submissions/1.json
+  # GET api/recruiters/submissions/1
+  # GET api/recruiters/submissions/1.json
   def show
   end
 
-  # POST /submissions
-  # POST /submissions.json
+  # POST api/recruiters/submissions
+  # POST api/recruiters/submissions.json
   def create
     @submission = Submission.new(submission_params)
 
@@ -25,8 +25,8 @@ class API::Recruiters::SubmissionsController < AuthorizationController
     end
   end
 
-  # PATCH/PUT /submissions/1
-  # PATCH/PUT /submissions/1.json
+  # PATCH/PUT api/recruiters/submissions/1
+  # PATCH/PUT api/recruiters/submissions/1.json
   def update
     if @submission.update(submission_params)
       render :show, status: :ok, location:  api_url(@submission)
@@ -35,8 +35,8 @@ class API::Recruiters::SubmissionsController < AuthorizationController
     end
   end
 
-  # DELETE /submissions/1
-  # DELETE /submissions/1.json
+  # DELETE api/recruiters/submissions/1
+  # DELETE api/recruiters/submissions/1.json
   def destroy
     @submission.destroy
   end

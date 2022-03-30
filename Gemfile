@@ -32,11 +32,11 @@ gem 'bootsnap', '>= 1.4.6', require: false
 #
 # format logs and reduce default logs
 gem 'dotenv-rails'
-gem 'lograge'
-gem 'logstash-event'
+# gem 'lograge'
+# gem 'logstash-event'
 # Elasticsearch integration
-gem 'elasticsearch-model'
-gem 'elasticsearch-rails'
+# gem 'elasticsearch-model','~> 5'
+# gem 'elasticsearch-rails'
 
 group :development, :test do
   gem 'awesome_print'
@@ -46,17 +46,17 @@ group :development, :test do
   gem 'rubocop', require: false
   gem "rubocop-performance", require: false
   gem "rubocop-rails", require: false
-  gem "rubocop-rspec", require: false
 end
 
 group :test do
   gem 'rspec-rails'
   gem 'factory_bot_rails'
   gem 'faker'
-  gem 'jsonapi-rspec'
   gem 'simplecov', require: false
   gem 'database_cleaner', '1.6.1'
-  gem 'elasticsearch-extensions'
+  gem 'shoulda-matchers', require: false
+  gem "rubocop-rspec", require: false
+  # gem 'elasticsearch-extensions'
 end
 
 group :development do

@@ -1,1 +1,1 @@
-json.partial! "api/recruiters/jobs/job", job: @job
+json.partial! "api/public/jobs/job", job: @job

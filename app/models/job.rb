@@ -1,15 +1,15 @@
 class Job < ApplicationRecord
-  include Elasticsearch::Model
-  include Elasticsearch::Model::Callbacks
+  include Filterable
+
+  enum status: {
+    active: 0,
+    inactive: 1
+  }
 
   belongs_to :recruiter
+  has_many :submissions
 
-  settings do
-    mappings dynamic: false do
-      indexes :id, index: :not_analyzed
-      indexes :title, type: :text, analyzer: :english
-      indexes :description, type: :text, analyzer: :english
-      indexes :skills, type: :text, analyzer: :english
-    end
-  end
+  validates :title, :description, :start_date, :end_date, :status, :skills, presence: true
+
+  scope :active, -> { where(status: :active) }
 end

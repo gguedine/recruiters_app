@@ -12,30 +12,31 @@ require 'rails_helper'
 # of tools you can use to make these specs even more expressive, but we're
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
-RSpec.describe "/recruiters", type: :request do
+RSpec.describe "api/recruiters", type: :request do
   # This should return the minimal set of attributes required to create a valid
   # Recruiter. As you add validations to Recruiter, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    attributes_for(:recruiter)
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    attributes_for(:recruiter, name: nil)
   }
 
   # This should return the minimal set of values that should be in the headers
   # in order to pass any filters (e.g. authentication) defined in
   # RecruitersController, or in your router and rack
   # middleware. Be sure to keep this updated too.
-  let(:valid_headers) {
-    {}
-  }
+  let(:valid_headers) do
+    token = JWT.encode({user_id: Recruiter.last&.id || create(:recruiter, valid_attributes)}, ENV['SECRET'])
+    { "Authorization": "Beared #{token}" }
+  end
 
   describe "GET /index" do
     it "renders a successful response" do
       Recruiter.create! valid_attributes
-      get recruiters_url, headers: valid_headers, as: :json
+      get api_recruiters_url, headers: valid_headers, as: :json
       expect(response).to be_successful
     end
   end
@@ -43,7 +44,7 @@ RSpec.describe "/recruiters", type: :request do
   describe "GET /show" do
     it "renders a successful response" do
       recruiter = Recruiter.create! valid_attributes
-      get recruiter_url(recruiter), as: :json
+      get api_recruiters_url(recruiter), headers: valid_headers, as: :json
       expect(response).to be_successful
     end
   end
@@ -52,14 +53,14 @@ RSpec.describe "/recruiters", type: :request do
     context "with valid parameters" do
       it "creates a new Recruiter" do
         expect {
-          post recruiters_url,
+          post api_recruiters_url,
                params: { recruiter: valid_attributes }, headers: valid_headers, as: :json
         }.to change(Recruiter, :count).by(1)
       end
 
       it "renders a JSON response with the new recruiter" do
-        post recruiters_url,
-             params: { recruiter: valid_attributes }, headers: valid_headers, as: :json
+        post api_recruiters_url,
+             params: { recruiter: attributes_for(:recruiter) },headers: valid_headers, as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
       end
@@ -68,13 +69,13 @@ RSpec.describe "/recruiters", type: :request do
     context "with invalid parameters" do
       it "does not create a new Recruiter" do
         expect {
-          post recruiters_url,
+          post api_recruiters_url,
                params: { recruiter: invalid_attributes }, as: :json
         }.to change(Recruiter, :count).by(0)
       end
 
       it "renders a JSON response with errors for the new recruiter" do
-        post recruiters_url,
+        post api_recruiters_url,
              params: { recruiter: invalid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -85,20 +86,21 @@ RSpec.describe "/recruiters", type: :request do
   describe "PATCH /update" do
     context "with valid parameters" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        attributes_for(:recruiter)
       }
 
       it "updates the requested recruiter" do
         recruiter = Recruiter.create! valid_attributes
-        patch recruiter_url(recruiter),
+        patch api_recruiter_url(recruiter),
               params: { recruiter: new_attributes }, headers: valid_headers, as: :json
         recruiter.reload
-        skip("Add assertions for updated state")
+        expect(recruiter).to have_attributes({email: new_attributes[:email],
+                                              name: new_attributes[:name]})
       end
 
       it "renders a JSON response with the recruiter" do
         recruiter = Recruiter.create! valid_attributes
-        patch recruiter_url(recruiter),
+        patch api_recruiter_url(recruiter),
               params: { recruiter: new_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -108,7 +110,7 @@ RSpec.describe "/recruiters", type: :request do
     context "with invalid parameters" do
       it "renders a JSON response with errors for the recruiter" do
         recruiter = Recruiter.create! valid_attributes
-        patch recruiter_url(recruiter),
+        patch api_recruiter_url(recruiter),
               params: { recruiter: invalid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -120,7 +122,7 @@ RSpec.describe "/recruiters", type: :request do
     it "destroys the requested recruiter" do
       recruiter = Recruiter.create! valid_attributes
       expect {
-        delete recruiter_url(recruiter), headers: valid_headers, as: :json
+        delete api_recruiter_url(recruiter), headers: valid_headers, as: :json
       }.to change(Recruiter, :count).by(-1)
     end
   end

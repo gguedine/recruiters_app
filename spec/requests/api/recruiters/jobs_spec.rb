@@ -12,30 +12,32 @@ require 'rails_helper'
 # of tools you can use to make these specs even more expressive, but we're
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
-RSpec.describe "/jobs", type: :request do
+RSpec.describe "api/recruiters/jobs", type: :request do
   # This should return the minimal set of attributes required to create a valid
   # Job. As you add validations to Job, be sure to
   # adjust the attributes here as well.
+  let(:recruiter) { create(:recruiter)}
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    attributes_for(:job, recruiter_id: recruiter.id)
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    attributes_for(:job, recruiter_id: recruiter.id, title: nil)
   }
 
   # This should return the minimal set of values that should be in the headers
   # in order to pass any filters (e.g. authentication) defined in
   # JobsController, or in your router and rack
   # middleware. Be sure to keep this updated too.
-  let(:valid_headers) {
-    {}
-  }
+  let(:valid_headers) do
+    token = JWT.encode({user_id: Recruiter.last&.id || create(:recruiter, valid_attributes)}, ENV['SECRET'])
+    { "Authorization": "Beared #{token}" }
+  end
 
   describe "GET /index" do
     it "renders a successful response" do
       Job.create! valid_attributes
-      get jobs_url, headers: valid_headers, as: :json
+      get api_recruiters_jobs_url, headers: valid_headers, as: :json
       expect(response).to be_successful
     end
   end
@@ -43,7 +45,7 @@ RSpec.describe "/jobs", type: :request do
   describe "GET /show" do
     it "renders a successful response" do
       job = Job.create! valid_attributes
-      get job_url(job), as: :json
+      get api_recruiters_job_url(job), headers: valid_headers, as: :json
       expect(response).to be_successful
     end
   end
@@ -52,13 +54,13 @@ RSpec.describe "/jobs", type: :request do
     context "with valid parameters" do
       it "creates a new Job" do
         expect {
-          post jobs_url,
+          post api_recruiters_jobs_url,
                params: { job: valid_attributes }, headers: valid_headers, as: :json
         }.to change(Job, :count).by(1)
       end
 
       it "renders a JSON response with the new job" do
-        post jobs_url,
+        post api_recruiters_jobs_url,
              params: { job: valid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -68,13 +70,13 @@ RSpec.describe "/jobs", type: :request do
     context "with invalid parameters" do
       it "does not create a new Job" do
         expect {
-          post jobs_url,
+          post api_recruiters_jobs_url,
                params: { job: invalid_attributes }, as: :json
         }.to change(Job, :count).by(0)
       end
 
       it "renders a JSON response with errors for the new job" do
-        post jobs_url,
+        post api_recruiters_jobs_url,
              params: { job: invalid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -85,20 +87,22 @@ RSpec.describe "/jobs", type: :request do
   describe "PATCH /update" do
     context "with valid parameters" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        attributes_for(:job, recruiter_id: recruiter.id)
       }
 
       it "updates the requested job" do
         job = Job.create! valid_attributes
-        patch job_url(job),
+        patch api_recruiters_job_url(job),
               params: { job: new_attributes }, headers: valid_headers, as: :json
         job.reload
-        skip("Add assertions for updated state")
+        expect(job).to have_attributes({title: new_attributes[:title],
+                                        description: new_attributes[:description]})
+
       end
 
       it "renders a JSON response with the job" do
         job = Job.create! valid_attributes
-        patch job_url(job),
+        patch api_recruiters_job_url(job),
               params: { job: new_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -108,7 +112,7 @@ RSpec.describe "/jobs", type: :request do
     context "with invalid parameters" do
       it "renders a JSON response with errors for the job" do
         job = Job.create! valid_attributes
-        patch job_url(job),
+        patch api_recruiters_job_url(job),
               params: { job: invalid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -120,7 +124,7 @@ RSpec.describe "/jobs", type: :request do
     it "destroys the requested job" do
       job = Job.create! valid_attributes
       expect {
-        delete job_url(job), headers: valid_headers, as: :json
+        delete api_recruiters_job_url(job), headers: valid_headers, as: :json
       }.to change(Job, :count).by(-1)
     end
   end
