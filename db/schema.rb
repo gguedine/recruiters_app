@@ -12,6 +12,9 @@
 
 ActiveRecord::Schema.define(version: 2022_03_29_202435) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "jobs", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -19,7 +22,7 @@ ActiveRecord::Schema.define(version: 2022_03_29_202435) do
     t.datetime "end_date"
     t.integer "status", default: 0
     t.text "skills"
-    t.integer "recruiter_id", null: false
+    t.bigint "recruiter_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["recruiter_id"], name: "index_jobs_on_recruiter_id"
@@ -38,7 +41,7 @@ ActiveRecord::Schema.define(version: 2022_03_29_202435) do
     t.string "email"
     t.string "mobile_phone"
     t.text "resume"
-    t.integer "job_id", null: false
+    t.bigint "job_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["job_id", "email"], name: "index_submissions_on_job_id_and_email", unique: true
