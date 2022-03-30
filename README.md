@@ -46,15 +46,25 @@ Using [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli):
 ```shell
 heroku git:remote -a recruiters-app-staging
 heroku git:remote --remote heroku-staging -a recruiters-app-staging
-    heroku git:remote --remote heroku-production -a recruiters-app-production
+heroku git:remote --remote heroku-production -a recruiters-app-production
 ```
 
-## Serve
+## Server
 
 ```shell
 rails s
 ```
 
+## Running test
+
+All tests:
+```shell
+rspec spec
+```
+Specific test
+```shell
+rspec <file_path>
+```
 ## Deploy
 
 ### With Heroku pipeline (recommended)
