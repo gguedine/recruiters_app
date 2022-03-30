@@ -7,7 +7,8 @@ RSpec.describe API::LoginController, type: :routing do
     end
 
     it "routes to #auto_login" do
-      expect(get: "/api/auto_login").to route_to("api/login#auto_login", format: :json)
+      expect(get: "/api/auto_login").to route_to("api/login#auto_login",
+                                                 format: :json)
     end
   end
 end

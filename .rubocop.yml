@@ -9,7 +9,7 @@ AllCops:
   NewCops: enable
   Exclude:
     - 'vendor/**/*'
-    - 'test/fixtures/**/*'
+    - 'spec/fixtures/**/*'
     - 'db/**/*'
     - 'bin/**/*'
     - 'log/**/*'
@@ -17,6 +17,7 @@ AllCops:
     - 'app/views/**/*'
     - 'config/environments/*'
     - 'node_modules/**/*'
+    - 'spec/factories/*'
 
 # Metrics Cops
 
@@ -43,7 +44,7 @@ Metrics/MethodLength:
 
 Metrics/BlockLength:
   CountComments: false
-  Max: 5
+  Max: 10
   IgnoredMethods:
     - context
     - describe
@@ -159,7 +160,7 @@ Layout/DotPosition:
 Layout/LineLength:
   Description: 'Limit lines to 80 characters.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#80-character-limits'
-  Max: 80
+  Max: 90
 
 Layout/MultilineOperationIndentation:
   Description: >-
@@ -185,3 +186,17 @@ Rails/Delegate:
 
 Bundler/OrderedGems:
   Enabled: false
+
+# RSPEC Cops
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Max: 5

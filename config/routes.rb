@@ -18,10 +18,10 @@ Rails.application.routes.draw do
     end
     resources :recruiters do
       # collection do
-        # post :login
-        # get :auto_login
-        # resources :jobs
-        # resources :submissions
+      # post :login
+      # get :auto_login
+      # resources :jobs
+      # resources :submissions
       # end
     end
 

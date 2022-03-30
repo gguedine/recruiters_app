@@ -1,6 +1,6 @@
 class API::RecruitersController < API::LoginController
   before_action :authorized, except: %i[create login]
-  before_action :set_recruiter, only: %i[ show update destroy ]
+  before_action :set_recruiter, only: %i[show update destroy]
 
   # GET /recruiters
   # GET /recruiters.json
@@ -10,8 +10,7 @@ class API::RecruitersController < API::LoginController
 
   # GET /recruiters/1
   # GET /recruiters/1.json
-  def show
-  end
+  def show; end
 
   # POST /recruiters
   # POST /recruiters.json
@@ -20,7 +19,8 @@ class API::RecruitersController < API::LoginController
 
     if @recruiter.save
       set_token
-      render :show, status: :created, location: api_url(@recruiter), locals: {token: @token}
+      render :show, status: :created, location: api_url(@recruiter),
+                    locals: { token: @token }
     else
       render json: @recruiter.errors, status: :unprocessable_entity
     end
@@ -31,7 +31,8 @@ class API::RecruitersController < API::LoginController
   def update
     if @recruiter.update(recruiter_params)
       set_token
-      render :show, status: :ok, location: api_url(@recruiter), locals: {token: @token}
+      render :show, status: :ok, location: api_url(@recruiter),
+                    locals: { token: @token }
     else
       render json: @recruiter.errors, status: :unprocessable_entity
     end
@@ -40,11 +41,12 @@ class API::RecruitersController < API::LoginController
   # DELETE /recruiters/1
   # DELETE /recruiters/1.json
   def destroy
-    render json: {data: @recruiter.destroy, message: "Deleted!"}
+    render json: { data: @recruiter.destroy, message: "Deleted!" }
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+
+  # Use callbacks to share common setup or constraints between actions.
   def set_recruiter
     @recruiter ||= Recruiter.find(params[:id])
   end

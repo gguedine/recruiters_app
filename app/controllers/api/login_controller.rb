@@ -4,21 +4,23 @@ class API::LoginController < AuthorizationController
 
   def login
     @recruiter = Recruiter.find_by(email: params[:email])
-    if @recruiter && @recruiter.authenticate(params[:password])
+    if @recruiter&.authenticate(params[:password])
       set_token
-      render 'api/recruiters/show', status: :ok, location: api_url(@recruiter), locals: {token: @token}
+      render "api/recruiters/show", status: :ok, location: api_url(@recruiter),
+                                    locals: { token: @token }
     else
-      render json: {error: "Invalid email or password"}, status: :unprocessable_entity
+      render json: { error: "Invalid email or password" },
+             status: :unprocessable_entity
     end
   end
 
   def auto_login
-    render 'api/recruiters/show', status: :ok, location: api_url(@recruiter)
+    render "api/recruiters/show", status: :ok, location: api_url(@recruiter)
   end
 
   private
 
   def login_params
-    params.require([:email,:password])
+    params.require([:email, :password])
   end
 end

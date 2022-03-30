@@ -1,8 +1,9 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Submission, type: :model do
-  let(:submission) { create(:submission, :with_job ) }
   subject { submission }
+
+  let(:submission) { create(:submission, :with_job) }
 
   describe "associations" do
     it { is_expected.to belong_to(:job) }
@@ -13,6 +14,6 @@ RSpec.describe Submission, type: :model do
     it { is_expected.to validate_presence_of(:email) }
     it { is_expected.to validate_presence_of(:mobile_phone) }
     it { is_expected.to validate_presence_of(:resume) }
-    it { should validate_uniqueness_of(:job_id).scoped_to(:email)}
+    it { is_expected.to validate_uniqueness_of(:job_id).scoped_to(:email) }
   end
 end

@@ -10,10 +10,10 @@ class API::Public::JobsController < ApplicationController
 
   # GET api/public/jobs/1
   # GET api/public/jobs/1.json
-  def show
-  end
+  def show; end
 
   private
+
   def set_job
     @job = Job.find(params[:id])
   end
@@ -21,5 +21,4 @@ class API::Public::JobsController < ApplicationController
   def filtering_params
     params.slice(:title, :description, :start_date, :end_date, :skills)
   end
-
 end
